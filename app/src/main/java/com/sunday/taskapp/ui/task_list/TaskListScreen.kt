@@ -13,32 +13,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sunday.taskapp.data.Task
 
-val tasks = listOf(Task(), Task(), Task())
-
-@Preview(showSystemUi = true, showBackground = true, backgroundColor = 0xFFD7CCC8)
+//@Preview(showSystemUi = true, showBackground = true, backgroundColor = 0xFFD7CCC8)
 @Composable
-fun TaskListScreen() {
+fun TaskListScreen(listVM: TaskListVM) {
 
     Scaffold(
-        content = { Content() },
+        content = { Content(listVM) },
         floatingActionButton = { AddFAB() },
         floatingActionButtonPosition = FabPosition.End
     )
 }
 
 @Composable
-fun Content() {
+fun Content(listVM: TaskListVM) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 12.dp)
     ) {
-        items(tasks) { task ->
-            TaskItem(task = task)
+        items(listVM.listState ) { task ->
+            TaskItem(task = task, listVM = listVM)
         }
     }
 }

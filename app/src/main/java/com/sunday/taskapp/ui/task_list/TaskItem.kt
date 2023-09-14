@@ -19,29 +19,31 @@ import androidx.compose.ui.unit.sp
 import com.sunday.taskapp.data.Task
 
 @Composable
-fun TaskItem(task: Task) {
-    TaskRow(task)
+fun TaskItem(task: Task, listVM: TaskListVM) {
+    TaskRow(task, listVM)
 }
 
 @Composable
-fun TaskRow(task: Task) {
+fun TaskRow(task: Task, listVM: TaskListVM) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        DoneCheckBox(task, Alignment.Center)
+        DoneCheckBox(task, listVM, Alignment.Center)
         TitleDescriptionColumn(task, Modifier.weight(1f))
         BinIcon(Alignment.Center)
     }
 }
 @Composable
-fun DoneCheckBox(task: Task, alignment: Alignment) {
+fun DoneCheckBox(task: Task, listVM: TaskListVM, alignment: Alignment) {
     Box(contentAlignment = alignment) {
         Checkbox(
-            checked = false,
-            onCheckedChange = { Log.i("MyTag", "Click en el check") }
+            checked = task.isChecked,
+            onCheckedChange = { isChecked -> // it: Boolean
+                listVM.onEvent(TaskListEvent.OnCheckBox(task, isChecked))
+            }
         )
     }
 }
