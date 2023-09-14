@@ -3,13 +3,11 @@ package com.sunday.taskapp.ui.task_list
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -19,12 +17,12 @@ import androidx.compose.ui.unit.sp
 import com.sunday.taskapp.data.Task
 
 @Composable
-fun TaskItem(task: Task, listVM: TaskListVM) {
-    TaskRow(task, listVM)
+fun TaskItem(task: Task, listVM: TaskListVM, scaffoldState: ScaffoldState) {
+    TaskRow(task, listVM, scaffoldState)
 }
 
 @Composable
-fun TaskRow(task: Task, listVM: TaskListVM) {
+fun TaskRow(task: Task, listVM: TaskListVM, scaffoldState: ScaffoldState) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,7 +31,7 @@ fun TaskRow(task: Task, listVM: TaskListVM) {
     ) {
         DoneCheckBox(task, listVM, Alignment.Center)
         TitleDescriptionColumn(task, Modifier.weight(1f))
-        BinIcon(Alignment.Center)
+        BinIcon(task, listVM, scaffoldState, Alignment.Center)
     }
 }
 @Composable
@@ -71,9 +69,17 @@ fun TitleDescriptionColumn(task: Task, modifier: Modifier) {
 }
 
 @Composable
-fun BinIcon(alignment: Alignment) {
+fun BinIcon(task: Task, listVM: TaskListVM, scaffoldState: ScaffoldState, alignment: Alignment) {
+
+//    val scope = rememberCoroutineScope()
     Box(contentAlignment = alignment) {
-        IconButton(onClick = { Log.i("MyTag", "Click en borrar") }) {
+        IconButton(onClick = {
+            listVM.onEvent(TaskListEvent.OnDeleteIcon(task, scaffoldState))
+//            scope.launch {
+//                scaffoldState.snackbarHostState
+//                    .showSnackbar("Hola Domingo")
+//            }
+        }) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
         }
     }
