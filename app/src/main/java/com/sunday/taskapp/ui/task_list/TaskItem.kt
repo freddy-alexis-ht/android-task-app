@@ -17,12 +17,12 @@ import androidx.compose.ui.unit.sp
 import com.sunday.taskapp.data.Task
 
 @Composable
-fun TaskItem(task: Task, listVM: TaskListVM, scaffoldState: ScaffoldState) {
-    TaskRow(task, listVM, scaffoldState)
+fun TaskItem(task: Task, listVM: TaskListVM) {
+    TaskRow(task, listVM)
 }
 
 @Composable
-fun TaskRow(task: Task, listVM: TaskListVM, scaffoldState: ScaffoldState) {
+fun TaskRow(task: Task, listVM: TaskListVM) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,7 +31,7 @@ fun TaskRow(task: Task, listVM: TaskListVM, scaffoldState: ScaffoldState) {
     ) {
         DoneCheckBox(task, listVM, Alignment.Center)
         TitleDescriptionColumn(task, Modifier.weight(1f))
-        BinIcon(task, listVM, scaffoldState, Alignment.Center)
+        BinIcon(task, listVM, Alignment.Center)
     }
 }
 @Composable
@@ -69,16 +69,11 @@ fun TitleDescriptionColumn(task: Task, modifier: Modifier) {
 }
 
 @Composable
-fun BinIcon(task: Task, listVM: TaskListVM, scaffoldState: ScaffoldState, alignment: Alignment) {
+fun BinIcon(task: Task, listVM: TaskListVM, alignment: Alignment) {
 
-//    val scope = rememberCoroutineScope()
     Box(contentAlignment = alignment) {
         IconButton(onClick = {
-            listVM.onEvent(TaskListEvent.OnDeleteIcon(task, scaffoldState))
-//            scope.launch {
-//                scaffoldState.snackbarHostState
-//                    .showSnackbar("Hola Domingo")
-//            }
+            listVM.onEvent(TaskListEvent.OnDeleteIcon(task))
         }) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
         }

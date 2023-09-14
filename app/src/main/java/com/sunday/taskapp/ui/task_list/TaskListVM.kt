@@ -33,8 +33,7 @@ class TaskListVM: ViewModel() {
             is TaskListEvent.OnCheckBox -> onCheckBox(event.task, event.isChecked)
             is TaskListEvent.OnTaskItem -> TODO()
             TaskListEvent.OnAddButton -> onAddButton()
-//            is TaskListEvent.OnAddButton -> onAddButton(event.navigateTo)
-            is TaskListEvent.OnDeleteIcon -> onDeleteIcon(event.task, event.scaffoldState)
+            is TaskListEvent.OnDeleteIcon -> onDeleteIcon(event.task)
             TaskListEvent.OnUndoDeleteInSnackbar -> TODO()
         }
     }
@@ -47,15 +46,13 @@ class TaskListVM: ViewModel() {
     private fun onAddButton() {
         sendEvent(CrossEvent.NavigateTo(route = Routes.ADD_EDIT_TASK))
     }
-//    private fun onAddButton(navigateTo: (CrossEvent.NavigateTo) -> Unit) {
-//        run {navigateTo(CrossEvent.NavigateTo(Routes.ADD_EDIT_TASK))}
-//    }
 
-    private fun onDeleteIcon(task: Task, scaffoldState: ScaffoldState) {
-        val showSnackbar = CrossEvent.ShowSnackbar("Hola Lucas", "Pasear")
-        viewModelScope.launch {
-            scaffoldState.snackbarHostState
-                .showSnackbar(showSnackbar.message, showSnackbar.action)
-        }
+    private fun onDeleteIcon(task: Task) {
+        this.sendEvent(CrossEvent.ShowSnackbar("Hola Lucas", "Pasear"))
+//        val showSnackbar = CrossEvent.ShowSnackbar("Hola Lucas", "Pasear")
+//        viewModelScope.launch {
+//            scaffoldState.snackbarHostState
+//                .showSnackbar(showSnackbar.message, showSnackbar.action)
+//        }
     }
 }

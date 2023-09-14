@@ -24,9 +24,12 @@ fun TaskListScreen(
 
     LaunchedEffect(key1 = true) {
         listVM.crossEvent.collect { event ->
-            when(event) {
+            when (event) {
                 is CrossEvent.NavigateTo -> navigateTo(event)
-                is CrossEvent.ShowSnackbar -> TODO()
+                is CrossEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState
+                        .showSnackbar(event.message, event.action)
+                }
                 //CrossEvent.NavigateBack -> // It's not used in screen-1
                 else -> Unit
             }
@@ -34,7 +37,7 @@ fun TaskListScreen(
     }
 
     Scaffold(
-        content = { Content(listVM, scaffoldState) },
+        content = { Content(listVM) },
         floatingActionButton = { AddFAB(listVM) },
         floatingActionButtonPosition = FabPosition.End,
         scaffoldState = scaffoldState
@@ -42,17 +45,16 @@ fun TaskListScreen(
 }
 
 @Composable
-fun Content(listVM: TaskListVM, scaffoldState: ScaffoldState) {
+fun Content(listVM: TaskListVM) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 12.dp)
     ) {
-        items(listVM.listState ) { task ->
+        items(listVM.listState) { task ->
             TaskItem(
                 task = task,
                 listVM = listVM,
-                scaffoldState = scaffoldState
             )
         }
     }
