@@ -19,8 +19,8 @@ fun Navigation(listVM: TaskListVM) {
         composable(route = Routes.TASK_LIST) {
             TaskListScreen(
                 listVM = listVM,
-                navigate = {
-                    navController.navigate(Routes.ADD_EDIT_TASK)
+                navigateTo = { // it: CrossEvent.NavigateTo
+                    navController.navigate(it.route)
                 }
             )
         }

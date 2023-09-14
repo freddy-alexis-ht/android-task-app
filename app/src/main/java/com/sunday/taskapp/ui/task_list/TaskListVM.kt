@@ -5,6 +5,8 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import com.sunday.taskapp.data.Task
 import com.sunday.taskapp.data.getTasks
+import com.sunday.taskapp.util.CrossEvent
+import com.sunday.taskapp.util.Routes
 
 class TaskListVM: ViewModel() {
 
@@ -15,7 +17,7 @@ class TaskListVM: ViewModel() {
         when(event) {
             is TaskListEvent.OnCheckBox -> onCheckBox(event.task, event.isChecked)
             is TaskListEvent.OnTaskItem -> TODO()
-            TaskListEvent.OnAddButton -> TODO()
+            is TaskListEvent.OnAddButton -> onAddButton(event.navigateTo)
             is TaskListEvent.OnDeleteIcon -> TODO()
             TaskListEvent.OnUndoDeleteInSnackbar -> TODO()
         }
@@ -24,6 +26,10 @@ class TaskListVM: ViewModel() {
     private fun onCheckBox(task: Task, isChecked: Boolean) {
         val indexToChange = task.index
         listState.set(indexToChange, task.copy(isChecked = isChecked))
+    }
+
+    private fun onAddButton(navigateTo: (CrossEvent.NavigateTo) -> Unit) {
+        run {navigateTo(CrossEvent.NavigateTo(Routes.ADD_EDIT_TASK))}
     }
 
 }
