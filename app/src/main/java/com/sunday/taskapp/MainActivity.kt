@@ -15,6 +15,7 @@ import com.sunday.taskapp.ui.add_edit_task.AddEditTaskScreen
 import com.sunday.taskapp.ui.task_list.TaskListScreen
 import com.sunday.taskapp.ui.task_list.TaskListVM
 import com.sunday.taskapp.ui.theme.TaskAppTheme
+import com.sunday.taskapp.util.Navigation
 
 class MainActivity : ComponentActivity() {
 
@@ -28,7 +29,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    TaskListScreen(listVM = listVM)
+                    Navigation(listVM = listVM)
+//                    TaskListScreen(listVM = listVM)
 //                    AddEditTaskScreen()
                 }
             }

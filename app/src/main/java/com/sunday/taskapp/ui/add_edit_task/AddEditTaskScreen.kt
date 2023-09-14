@@ -1,7 +1,6 @@
 package com.sunday.taskapp.ui.add_edit_task
 
 import android.util.Log
-import android.widget.Space
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -11,17 +10,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-@Preview(showSystemUi = true, showBackground = true, backgroundColor = 0xFFD7CCC8)
+//@Preview(showSystemUi = true, showBackground = true, backgroundColor = 0xFFD7CCC8)
 @Composable
-fun AddEditTaskScreen() {
+fun AddEditTaskScreen(navigateBack: () -> Unit) {
 
     Scaffold(
         modifier = Modifier.padding(16.dp),
         content = { Content() },
-        floatingActionButton = { SaveFAB() },
+        floatingActionButton = { SaveFAB(navigateBack) },
         floatingActionButtonPosition = FabPosition.End
     )
 }
@@ -51,8 +49,11 @@ fun Content() {
 }
 
 @Composable
-fun SaveFAB() {
-    FloatingActionButton(onClick = { Log.i("MyTag", "Click en el botón check") }) {
+fun SaveFAB(navigateBack: () -> Unit) {
+    FloatingActionButton(onClick = {
+        navigateBack()
+        Log.i("MyTag", "Regresa a task_list")
+    }) {
         Icon(imageVector = Icons.Default.Check, contentDescription = "Save")
     }
 }

@@ -14,15 +14,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sunday.taskapp.data.Task
 
 //@Preview(showSystemUi = true, showBackground = true, backgroundColor = 0xFFD7CCC8)
 @Composable
-fun TaskListScreen(listVM: TaskListVM) {
+fun TaskListScreen(listVM: TaskListVM, navigate: () -> Unit) {
 
     Scaffold(
         content = { Content(listVM) },
-        floatingActionButton = { AddFAB() },
+        floatingActionButton = { AddFAB(navigate) },
         floatingActionButtonPosition = FabPosition.End
     )
 }
@@ -41,9 +40,12 @@ fun Content(listVM: TaskListVM) {
 }
 
 @Composable
-fun AddFAB() {
+fun AddFAB(navigate: () -> Unit) {
     FloatingActionButton(
-        onClick = { Log.i("MyTag", "Click en el botón +") },
+        onClick = {
+            navigate()
+            Log.i("MyTag", "Va a add_edit_task")
+        },
         modifier = Modifier.padding(16.dp)
     ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = "Add task")
