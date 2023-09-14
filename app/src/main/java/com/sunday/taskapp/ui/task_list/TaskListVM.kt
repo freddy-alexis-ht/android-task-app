@@ -10,17 +10,30 @@ import com.sunday.taskapp.data.getTasks
 import com.sunday.taskapp.util.CrossEvent
 import com.sunday.taskapp.util.Routes
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 class TaskListVM: ViewModel() {
 
     var listState by mutableStateOf(getTasks())
         private set
 
+    // kotlinx.coroutines.channels.Channel
+    private val _crossEvent = Channel<CrossEvent>()
+    val crossEvent = _crossEvent.receiveAsFlow()
+
+    private fun sendEvent(event: CrossEvent) {
+        viewModelScope.launch {
+            _crossEvent.send(event)
+        }
+    }
+
     fun onEvent(event: TaskListEvent) {
         when(event) {
             is TaskListEvent.OnCheckBox -> onCheckBox(event.task, event.isChecked)
             is TaskListEvent.OnTaskItem -> TODO()
-            is TaskListEvent.OnAddButton -> onAddButton(event.navigateTo)
+            TaskListEvent.OnAddButton -> onAddButton()
+//            is TaskListEvent.OnAddButton -> onAddButton(event.navigateTo)
             is TaskListEvent.OnDeleteIcon -> onDeleteIcon(event.task, event.scaffoldState)
             TaskListEvent.OnUndoDeleteInSnackbar -> TODO()
         }
@@ -31,9 +44,12 @@ class TaskListVM: ViewModel() {
         listState.set(indexToChange, task.copy(isChecked = isChecked))
     }
 
-    private fun onAddButton(navigateTo: (CrossEvent.NavigateTo) -> Unit) {
-        run {navigateTo(CrossEvent.NavigateTo(Routes.ADD_EDIT_TASK))}
+    private fun onAddButton() {
+        sendEvent(CrossEvent.NavigateTo(route = Routes.ADD_EDIT_TASK))
     }
+//    private fun onAddButton(navigateTo: (CrossEvent.NavigateTo) -> Unit) {
+//        run {navigateTo(CrossEvent.NavigateTo(Routes.ADD_EDIT_TASK))}
+//    }
 
     private fun onDeleteIcon(task: Task, scaffoldState: ScaffoldState) {
         val showSnackbar = CrossEvent.ShowSnackbar("Hola Lucas", "Pasear")

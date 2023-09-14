@@ -9,9 +9,11 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sunday.taskapp.util.CrossEvent
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun TaskListScreen(
@@ -20,9 +22,20 @@ fun TaskListScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
 
+    LaunchedEffect(key1 = true) {
+        listVM.crossEvent.collect { event ->
+            when(event) {
+                is CrossEvent.NavigateTo -> navigateTo(event)
+                is CrossEvent.ShowSnackbar -> TODO()
+                //CrossEvent.NavigateBack -> // It's not used in screen-1
+                else -> Unit
+            }
+        }
+    }
+
     Scaffold(
         content = { Content(listVM, scaffoldState) },
-        floatingActionButton = { AddFAB(listVM, navigateTo) },
+        floatingActionButton = { AddFAB(listVM) },
         floatingActionButtonPosition = FabPosition.End,
         scaffoldState = scaffoldState
     )
@@ -46,10 +59,10 @@ fun Content(listVM: TaskListVM, scaffoldState: ScaffoldState) {
 }
 
 @Composable
-fun AddFAB(listVM: TaskListVM, navigateTo: (CrossEvent.NavigateTo) -> Unit) {
+fun AddFAB(listVM: TaskListVM) {
     FloatingActionButton(
         onClick = {
-            listVM.onEvent(TaskListEvent.OnAddButton(navigateTo))
+            listVM.onEvent(TaskListEvent.OnAddButton)
             Log.i("MyTag", "Va a add_edit_task")
         },
         modifier = Modifier.padding(16.dp)
