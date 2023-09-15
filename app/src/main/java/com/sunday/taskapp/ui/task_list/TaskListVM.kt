@@ -28,13 +28,15 @@ class TaskListVM: ViewModel() {
         }
     }
 
+    private var deletedTask: Task? = null
+
     fun onEvent(event: TaskListEvent) {
         when(event) {
             is TaskListEvent.OnCheckBox -> onCheckBox(event.task, event.isChecked)
             is TaskListEvent.OnTaskItem -> TODO()
             TaskListEvent.OnAddButton -> onAddButton()
             is TaskListEvent.OnDeleteIcon -> onDeleteIcon(event.task)
-            TaskListEvent.OnUndoDeleteInSnackbar -> TODO()
+            TaskListEvent.OnUndoDeleteInSnackbar -> onUndoDeleteInSnackbar()
         }
     }
 
@@ -48,11 +50,13 @@ class TaskListVM: ViewModel() {
     }
 
     private fun onDeleteIcon(task: Task) {
-        this.sendEvent(CrossEvent.ShowSnackbar("Hola Lucas", "Pasear"))
-//        val showSnackbar = CrossEvent.ShowSnackbar("Hola Lucas", "Pasear")
-//        viewModelScope.launch {
-//            scaffoldState.snackbarHostState
-//                .showSnackbar(showSnackbar.message, showSnackbar.action)
-//        }
+        this.deletedTask = task
+        this.listState.remove(task)
+        this.sendEvent(CrossEvent.ShowSnackbar("Task borrado", "DESHACER"))
+    }
+
+    private fun onUndoDeleteInSnackbar() {
+        val undoIndex = this.deletedTask?.index
+        this.listState.add(undoIndex!!,deletedTask!!)
     }
 }

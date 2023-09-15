@@ -27,8 +27,11 @@ fun TaskListScreen(
             when (event) {
                 is CrossEvent.NavigateTo -> navigateTo(event)
                 is CrossEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState
+                    val undoClicked = scaffoldState.snackbarHostState
                         .showSnackbar(event.message, event.action)
+                    if(undoClicked == SnackbarResult.ActionPerformed) {
+                        listVM.onEvent(TaskListEvent.OnUndoDeleteInSnackbar)
+                    }
                 }
                 //CrossEvent.NavigateBack -> // It's not used in screen-1
                 else -> Unit
