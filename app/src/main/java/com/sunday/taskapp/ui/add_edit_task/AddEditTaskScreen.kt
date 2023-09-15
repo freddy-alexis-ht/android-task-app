@@ -35,7 +35,7 @@ fun AddEditTaskScreen(
 
     Scaffold(
         modifier = Modifier.padding(16.dp),
-        content = { Content() },
+        content = { Content(addEditVW) },
         floatingActionButton = { SaveFAB(addEditVW) },
         floatingActionButtonPosition = FabPosition.End,
         scaffoldState = scaffoldState
@@ -43,13 +43,13 @@ fun AddEditTaskScreen(
 }
 
 @Composable
-fun Content() {
+fun Content(addEditVW: AddEditTaskVM) {
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(top = 12.dp)) {
         TextField(
-            value = "",
-            onValueChange = { Log.i("MyTag", "Writing in title text-field") },
+            value = addEditVW.title,
+            onValueChange = { addEditVW.onEvent(AddEditTaskEvent.OnTitleChange(it))},
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = "Título") },
             maxLines = 1,
@@ -58,8 +58,8 @@ fun Content() {
         )
         Spacer(modifier = Modifier.height(12.dp))
         TextField(
-            value = "",
-            onValueChange = { Log.i("MyTag", "Writing in description text-field") },
+            value = addEditVW.description,
+            onValueChange = { addEditVW.onEvent(AddEditTaskEvent.OnDescriptionChange(it))},
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = "Descripción") },
             maxLines = 5,

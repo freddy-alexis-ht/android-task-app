@@ -9,8 +9,8 @@ data class Task(
     var isChecked: Boolean
 )
 
-fun getTasks(): MutableList<Task> {
-    var list = (1..4).map { it ->
+object Tasks {
+    private var temp: List<Task> = (1..4).map { it ->
         Task(
             index = it - 1,
             title = "Título $it",
@@ -18,5 +18,9 @@ fun getTasks(): MutableList<Task> {
             isChecked = false
         )
     }
-    return list.toMutableStateList()
+    private var list: MutableList<Task> = temp.toMutableStateList()
+
+    fun getTasks(): MutableList<Task> {
+        return this.list
+    }
 }
