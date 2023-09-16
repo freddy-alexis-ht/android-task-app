@@ -6,13 +6,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sunday.taskapp.data.Task
-import com.sunday.taskapp.data.Tasks
+import com.sunday.taskapp.data.TaskProvider
+import com.sunday.taskapp.data.TaskRepository
 import com.sunday.taskapp.util.CrossEvent
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class AddEditTaskVM: ViewModel() {
+
+    private var repo: TaskRepository = TaskProvider()
 
     var taskId by mutableStateOf<Int>(0)
 
@@ -51,20 +54,20 @@ class AddEditTaskVM: ViewModel() {
             sendEvent(CrossEvent.ShowSnackbar("El título no debe estar vacío."))
             return
         }
-        val currentTaskIndex = Tasks.getTasks().last().id
+        val currentTaskIndex = repo.getTasks().last().id
         if(taskId == -1){
-            Tasks.insertTask(Task(
+            repo.insertTask(Task(
                 id = currentTaskIndex + 1,
                 title = title,
                 description = description,
                 isChecked = false
             ))
         } else {
-            Tasks.updateTask(Task(
+            repo.updateTask(Task(
                 id = taskId,
                 title = title,
                 description = description,
-                isChecked = Tasks.getTaskById(taskId).isChecked
+                isChecked = repo.getTaskById(taskId).isChecked
             ))
         }
         sendEvent(CrossEvent.NavigateBack)

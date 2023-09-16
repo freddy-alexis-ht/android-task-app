@@ -11,7 +11,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
 class TaskListVM: ViewModel() {
-    var listState by mutableStateOf(Tasks.getTasks())
+
+    private var repo: TaskRepository = TaskProvider()
+
+    var listState by mutableStateOf(repo.getTasks())
         private set
 
     // kotlinx.coroutines.channels.Channel
@@ -38,8 +41,7 @@ class TaskListVM: ViewModel() {
     }
 
     private fun onCheckBox(task: Task, isChecked: Boolean) {
-        val indexToChange = listState.indexOf(task)
-        listState.set(indexToChange, task.copy(isChecked = isChecked))
+        repo.updateTask(task.copy(isChecked = isChecked))
     }
 
     private fun onTaskItem(task: Task) {
@@ -53,11 +55,11 @@ class TaskListVM: ViewModel() {
     private fun onDeleteIcon(task: Task) {
         this.deletedTask = task
         this.deletedIndex = listState.indexOf(task)
-        this.listState.remove(task)
-        this.sendEvent(CrossEvent.ShowSnackbar("Task borrado", "DESHACER"))
+        repo.deleteTask(task)
+        this.sendEvent(CrossEvent.ShowSnackbar("Tarea borrada", "DESHACER"))
     }
 
     private fun onUndoDeleteInSnackbar() {
-        this.listState.add(deletedIndex!!,deletedTask!!)
+        repo.insertTask(deletedIndex!!,deletedTask!!)
     }
 }

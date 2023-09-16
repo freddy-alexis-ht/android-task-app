@@ -12,7 +12,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.sunday.taskapp.data.Tasks
+import com.sunday.taskapp.data.TaskProvider
+import com.sunday.taskapp.data.TaskRepository
 import com.sunday.taskapp.util.CrossEvent
 
 @Composable
@@ -51,10 +52,11 @@ fun AddEditTaskScreen(
 fun Content(addEditVW: AddEditTaskVM, taskId: Int) {
 
     LaunchedEffect(Unit) {
+        val repo: TaskRepository = TaskProvider()
         if (taskId == -1)
             addEditVW.updateTitleAndDescription("", "")
         else {
-            val taskSent = Tasks.getTaskById(taskId)
+            val taskSent = repo.getTaskById(taskId)
             addEditVW.updateTitleAndDescription(taskSent.title, taskSent.description ?: ""
             )
         }
