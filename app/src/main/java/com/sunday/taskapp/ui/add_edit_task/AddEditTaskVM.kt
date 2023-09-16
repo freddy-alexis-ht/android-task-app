@@ -1,13 +1,12 @@
 package com.sunday.taskapp.ui.add_edit_task
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sunday.taskapp.data.Task
-import com.sunday.taskapp.ui.task_list.TaskListVM
+import com.sunday.taskapp.data.Tasks
 import com.sunday.taskapp.util.CrossEvent
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -15,10 +14,7 @@ import kotlinx.coroutines.launch
 
 class AddEditTaskVM: ViewModel() {
 
-    var listVM = TaskListVM()
-
-    var task by mutableStateOf<Task?>(null)
-        private set
+    var taskId by mutableStateOf<Int>(0)
 
     var title by mutableStateOf<String>("")
         private set
@@ -51,8 +47,31 @@ class AddEditTaskVM: ViewModel() {
     }
 
     private fun onSaveButton() {
-        val currentTaskIndex = listVM.listState.last().index
-        listVM.listState.add(Task(index = currentTaskIndex+1, title, description, false))
+        if(title.isBlank()) {
+            sendEvent(CrossEvent.ShowSnackbar("El título no debe estar vacío."))
+            return
+        }
+        val currentTaskIndex = Tasks.getTasks().last().id
+        if(taskId == -1){
+            Tasks.insertTask(Task(
+                id = currentTaskIndex + 1,
+                title = title,
+                description = description,
+                isChecked = false
+            ))
+        } else {
+            Tasks.updateTask(Task(
+                id = taskId,
+                title = title,
+                description = description,
+                isChecked = Tasks.getTaskById(taskId).isChecked
+            ))
+        }
         sendEvent(CrossEvent.NavigateBack)
+    }
+
+    fun updateTitleAndDescription(title: String, description: String) {
+        this.title = title
+        this.description = description
     }
 }

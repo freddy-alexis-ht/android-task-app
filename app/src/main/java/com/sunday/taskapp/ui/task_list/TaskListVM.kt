@@ -30,7 +30,7 @@ class TaskListVM: ViewModel() {
     fun onEvent(event: TaskListEvent) {
         when(event) {
             is TaskListEvent.OnCheckBox -> onCheckBox(event.task, event.isChecked)
-            is TaskListEvent.OnTaskItem -> TODO()
+            is TaskListEvent.OnTaskItem -> onTaskItem(event.task)
             TaskListEvent.OnAddButton -> onAddButton()
             is TaskListEvent.OnDeleteIcon -> onDeleteIcon(event.task)
             TaskListEvent.OnUndoDeleteInSnackbar -> onUndoDeleteInSnackbar()
@@ -38,8 +38,12 @@ class TaskListVM: ViewModel() {
     }
 
     private fun onCheckBox(task: Task, isChecked: Boolean) {
-        val indexToChange = task.index
+        val indexToChange = listState.indexOf(task)
         listState.set(indexToChange, task.copy(isChecked = isChecked))
+    }
+
+    private fun onTaskItem(task: Task) {
+        sendEvent(CrossEvent.NavigateTo(route = Routes.ADD_EDIT_TASK + "?taskId=${task.id}"))
     }
 
     private fun onAddButton() {

@@ -12,21 +12,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.sunday.taskapp.data.Tasks
 import com.sunday.taskapp.util.CrossEvent
 
 @Composable
 fun AddEditTaskScreen(
     addEditVW: AddEditTaskVM,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    taskId: Int?
 ) {
 
     val scaffoldState = rememberScaffoldState()
+    addEditVW.taskId = taskId!!
 
     LaunchedEffect(key1 = true) {
         addEditVW.crossEvent.collect { event ->
-            when(event) {
+            when (event) {
                 CrossEvent.NavigateBack -> navigateBack()
-                is CrossEvent.ShowSnackbar -> TODO()
+                is CrossEvent.ShowSnackbar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(event.message)
+                }
                 // is CrossEvent.NavigateTo -> // is not used in screen-2
                 else -> Unit
             }
@@ -35,7 +40,7 @@ fun AddEditTaskScreen(
 
     Scaffold(
         modifier = Modifier.padding(16.dp),
-        content = { Content(addEditVW) },
+        content = { Content(addEditVW, taskId) },
         floatingActionButton = { SaveFAB(addEditVW) },
         floatingActionButtonPosition = FabPosition.End,
         scaffoldState = scaffoldState
@@ -43,13 +48,26 @@ fun AddEditTaskScreen(
 }
 
 @Composable
-fun Content(addEditVW: AddEditTaskVM) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 12.dp)) {
+fun Content(addEditVW: AddEditTaskVM, taskId: Int) {
+
+    LaunchedEffect(Unit) {
+        if (taskId == -1)
+            addEditVW.updateTitleAndDescription("", "")
+        else {
+            val taskSent = Tasks.getTaskById(taskId)
+            addEditVW.updateTitleAndDescription(taskSent.title, taskSent.description ?: ""
+            )
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 12.dp)
+    ) {
         TextField(
             value = addEditVW.title,
-            onValueChange = { addEditVW.onEvent(AddEditTaskEvent.OnTitleChange(it))},
+            onValueChange = { addEditVW.onEvent(AddEditTaskEvent.OnTitleChange(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = "Título") },
             maxLines = 1,
@@ -59,7 +77,7 @@ fun Content(addEditVW: AddEditTaskVM) {
         Spacer(modifier = Modifier.height(12.dp))
         TextField(
             value = addEditVW.description,
-            onValueChange = { addEditVW.onEvent(AddEditTaskEvent.OnDescriptionChange(it))},
+            onValueChange = { addEditVW.onEvent(AddEditTaskEvent.OnDescriptionChange(it)) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = "Descripción") },
             maxLines = 5,

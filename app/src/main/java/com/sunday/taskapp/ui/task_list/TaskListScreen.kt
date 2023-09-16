@@ -1,6 +1,5 @@
 package com.sunday.taskapp.ui.task_list
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +12,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sunday.taskapp.util.CrossEvent
-import kotlinx.coroutines.flow.collect
 
 @Composable
 fun TaskListScreen(
@@ -68,7 +66,6 @@ fun AddFAB(listVM: TaskListVM) {
     FloatingActionButton(
         onClick = {
             listVM.onEvent(TaskListEvent.OnAddButton)
-            Log.i("MyTag", "Va a add_edit_task")
         },
         modifier = Modifier.padding(16.dp)
     ) {

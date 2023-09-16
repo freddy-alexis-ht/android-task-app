@@ -30,7 +30,7 @@ fun TaskRow(task: Task, listVM: TaskListVM) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         DoneCheckBox(task, listVM, Alignment.Center)
-        TitleDescriptionColumn(task, Modifier.weight(1f))
+        TitleDescriptionColumn(task, listVM, Modifier.weight(1f))
         BinIcon(task, listVM, Alignment.Center)
     }
 }
@@ -47,24 +47,28 @@ fun DoneCheckBox(task: Task, listVM: TaskListVM, alignment: Alignment) {
 }
 
 @Composable
-fun TitleDescriptionColumn(task: Task, modifier: Modifier) {
+fun TitleDescriptionColumn(task: Task, listVM: TaskListVM, modifier: Modifier) {
     Column(
         modifier = modifier
-            .clickable { Log.i("MyTag", "Click en el task para editar") }
+            .clickable { listVM.onEvent(TaskListEvent.OnTaskItem(task)) }
     ) {
         Text(
             text = task.title,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
-            modifier = Modifier.padding(6.dp)
-        )
-        Text(
-            text = task.description,
-            fontSize = 16.sp,
             modifier = Modifier.padding(6.dp),
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
+        task.description?.let {
+            Text(
+                text = it,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(6.dp),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 
