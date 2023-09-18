@@ -1,5 +1,6 @@
 package com.sunday.taskapp.data
 
+import android.util.Log
 import androidx.compose.runtime.toMutableStateList
 
 class TaskProvider: TaskRepository {
@@ -18,6 +19,7 @@ class TaskProvider: TaskRepository {
 
 
     override fun getTasks(): MutableList<Task> {
+        Log.i("MyTag", "Provider: " )
         return list
     }
     override fun getTaskById(id: Int): Task {

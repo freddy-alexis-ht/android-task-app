@@ -1,6 +1,5 @@
 package com.sunday.taskapp.ui.add_edit_task
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -90,7 +90,9 @@ fun Content(addEditVW: AddEditTaskVM, taskId: Int) {
 
 @Composable
 fun SaveFAB(addEditVW: AddEditTaskVM) {
+    val context = LocalContext.current
     FloatingActionButton(onClick = {
+//        addEditVW.useContextToInitTaskDataStore(context)
         addEditVW.onEvent(AddEditTaskEvent.OnSaveButton)
     }) {
         Icon(imageVector = Icons.Default.Check, contentDescription = "Save")

@@ -1,11 +1,14 @@
 package com.sunday.taskapp.ui.add_edit_task
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sunday.taskapp.data.Task
+import com.sunday.taskapp.data.TaskDataStore
 import com.sunday.taskapp.data.TaskProvider
 import com.sunday.taskapp.data.TaskRepository
 import com.sunday.taskapp.util.CrossEvent
@@ -14,8 +17,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class AddEditTaskVM: ViewModel() {
-
     private var repo: TaskRepository = TaskProvider()
+//    private lateinit var repo2: TaskRepository
+//    private lateinit var repo2: TaskDataStore
+
+//    fun useContextToInitTaskDataStore(context: Context) {
+//        Log.i("MyTag", "Context: $context")
+//        repo2 =  TaskDataStore(context)
+//        Log.i("MyTag", "Repo2: $repo2")
+//    }
 
     var taskId by mutableStateOf<Int>(0)
 
@@ -62,6 +72,13 @@ class AddEditTaskVM: ViewModel() {
                 description = description,
                 isChecked = false
             ))
+//            repo2.insertTask(Task(
+//                id = currentTaskIndex + 1,
+//                title = title,
+//                description = description,
+//                isChecked = false
+//            ))
+//            repo2.getTasks()
         } else {
             repo.updateTask(Task(
                 id = taskId,
